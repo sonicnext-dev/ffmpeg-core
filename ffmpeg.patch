@@ -1,14 +1,3 @@
-From 52af1be6da9d643f00e06853aefd680f58cdae66 Mon Sep 17 00:00:00 2001
-From: Isaac Marovitz <isaacmarovitz@proton.me>
-Date: Sat, 21 Nov 2026 17:30:42 -0500
-Subject: [PATCH] Update portfile
-
----
- ports/ffmpeg/0008-xmaframes.patch | 193 ++++++++++++++++++++++++++++++
- ports/ffmpeg/portfile.cmake       |  12 ++
- 2 files changed, 205 insertions(+)
- create mode 100644 ports/ffmpeg/0008-xmaframes.patch
-
 diff --git a/ports/ffmpeg/0008-xmaframes.patch b/ports/ffmpeg/0008-xmaframes.patch
 new file mode 100644
 index 0000000000..6b8f105a19
@@ -220,20 +209,21 @@ index fa73a16e0f..a7dea025a2 100644
          0013-define-WINVER.patch
          0024-fix-osx-host-c11.patch
          0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-@@ -35,6 +36,12 @@ endif()
+@@ -35,6 +36,13 @@ endif()
 
  set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
 
 +# Only enable what is used by MarathonRecomp
 +string(APPEND OPTIONS " --disable-everything")
-+string(APPEND OPTIONS " --enable-decoder=xmaframes,wmv3,wmav2,wmapro,theora,vorbis,h264,aac")
-+string(APPEND OPTIONS " --enable-demuxer=asf,ogg,mov")
-+string(APPEND OPTIONS " --enable-parser=vorbis,h264,aac")
++string(APPEND OPTIONS " --enable-decoder=xmaframes,xma1,xma2,wmv3,wmav2,wmapro,theora,vorbis,h264,aac,flac,opus,mp3float,pcm_s16le,pcm_s24le,pcm_f32le")
++string(APPEND OPTIONS " --enable-demuxer=asf,ogg,mov,wav,flac,mp3")
++string(APPEND OPTIONS " --enable-parser=vorbis,h264,aac,flac,opus,mpegaudio")
++string(APPEND OPTIONS " --enable-protocol=file")
 +
  if(VCPKG_TARGET_IS_MINGW)
      if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
          string(APPEND OPTIONS " --target-os=mingw32")
-@@ -772,6 +779,11 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+@@ -772,6 +780,11 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
      # We use response files here as the only known way to handle spaces in paths
      set(crsp "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cflags.rsp")
      string(REGEX REPLACE "-arch [A-Za-z0-9_]+" "" VCPKG_COMBINED_C_FLAGS_RELEASE_SANITIZED "${VCPKG_COMBINED_C_FLAGS_RELEASE}")
